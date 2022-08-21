@@ -71,7 +71,6 @@ describe("sushiBar", function () {
 
       await sushiToken.connect(acc1).approve(sushiBar.address,"2000000000000000000000");
       await sushiBar.connect(acc1).enter("2000000000000000000000");
-      // console.log(await sushiToken.balanceOf(sushiBar.address),await sushiBar.totalSupply());
 
       await sushiToken.approve(sushiBar.address,"1000000000000000000000");
       await sushiBar.enter("1000000000000000000000");
@@ -91,7 +90,6 @@ describe("sushiBar", function () {
       const EightDaysInSec = 8 * 24 * 60 * 60;
       const unlockTime = (await time.latest()) + EightDaysInSec;
 
-      // console.log(await sushiToken.balanceOf(acc1.address));
       await time.increaseTo(unlockTime);
       await sushiBar.connect(acc1).leave("2000000000000000000000","0");
       expect(await sushiToken.balanceOf(acc1.address)).to.equal("2000000000000000000000");
@@ -105,10 +103,9 @@ describe("sushiBar", function () {
       await sushiToken.connect(acc1).approve(sushiBar.address,"2000000000000000000000");
       await sushiBar.connect(acc1).enter("2000000000000000000000");
 
-      const EightDaysInSec = 7 * 24 * 60 * 60;
-      const unlockTime = (await time.latest()) + EightDaysInSec;
+      const SevenDaysInSec = 7 * 24 * 60 * 60;
+      const unlockTime = (await time.latest()) + SevenDaysInSec;
 
-      // console.log(await sushiToken.balanceOf(acc1.address));
       await time.increaseTo(unlockTime);
       await sushiBar.connect(acc1).leave("2000000000000000000000","0");
       expect(await sushiToken.balanceOf(acc1.address)).to.equal("1500000000000000000000");
@@ -117,15 +114,14 @@ describe("sushiBar", function () {
     });
 
     it("after 4days 50% tax should deduct", async function () {
-      const {sushiToken,sushiBar,acc1,owner,rewardPool} = await loadFixture(deployFixture);
+      const {sushiToken,sushiBar,acc1,rewardPool} = await loadFixture(deployFixture);
 
       await sushiToken.connect(acc1).approve(sushiBar.address,"2000000000000000000000");
       await sushiBar.connect(acc1).enter("2000000000000000000000");
 
-      const EightDaysInSec = 5* 24 * 60 * 60;
-      const unlockTime = (await time.latest()) + EightDaysInSec;
+      const FiveDaysInSec = 5* 24 * 60 * 60;
+      const unlockTime = (await time.latest()) + FiveDaysInSec;
 
-      // console.log(await sushiToken.balanceOf(acc1.address));
       await time.increaseTo(unlockTime);
       await sushiBar.connect(acc1).leave("2000000000000000000000","0");
       expect(await sushiToken.balanceOf(acc1.address)).to.equal("1000000000000000000000");
@@ -134,15 +130,14 @@ describe("sushiBar", function () {
     });
 
     it("after 2days 75% tax should deduct", async function () {
-      const {sushiToken,sushiBar,acc1,owner,rewardPool} = await loadFixture(deployFixture);
+      const {sushiToken,sushiBar,acc1,rewardPool} = await loadFixture(deployFixture);
 
       await sushiToken.connect(acc1).approve(sushiBar.address,"2000000000000000000000");
       await sushiBar.connect(acc1).enter("2000000000000000000000");
 
-      const EightDaysInSec = 3* 24 * 60 * 60;
-      const unlockTime = (await time.latest()) + EightDaysInSec;
+      const ThreeDaysInSec = 3* 24 * 60 * 60;
+      const unlockTime = (await time.latest()) + ThreeDaysInSec;
 
-      // console.log(await sushiToken.balanceOf(acc1.address));
       await time.increaseTo(unlockTime);
       await sushiBar.connect(acc1).leave("2000000000000000000000","0");
       expect(await sushiToken.balanceOf(acc1.address)).to.equal("500000000000000000000");
@@ -159,7 +154,6 @@ describe("sushiBar", function () {
       const EightDaysInSec = 1* 24 * 60 * 60;
       const unlockTime = (await time.latest()) + EightDaysInSec;
 
-      // console.log(await sushiToken.balanceOf(acc1.address));
       await time.increaseTo(unlockTime);
       await sushiBar.connect(acc1).leave("2000000000000000000000","0");
       expect(await sushiToken.balanceOf(acc1.address)).to.equal("0");
