@@ -18,7 +18,7 @@ contract Sushibar is ERC20("SushiBar", "xSUSHI"){
         uint256 amount;
     }
     Deposit[] public deposits;
-
+    event depositId (uint256 ID);
     IERC20 public sushi;
     address public pool;
 
@@ -54,6 +54,7 @@ contract Sushibar is ERC20("SushiBar", "xSUSHI"){
 
         // Lock the Sushi in the contract
         sushi.transferFrom(msg.sender, address(this), _amount);
+        emit depositId(deposits.length.sub(1));
     }
 
     // Leave the bar. Claim back your SUSHIs.
