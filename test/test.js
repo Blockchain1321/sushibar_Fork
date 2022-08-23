@@ -46,8 +46,7 @@ describe("sushiBar", function () {
 
   describe("enter", function () {
     it("Should mint correct amount of xSushi and sushi token should transfer to sushiBar", async function () {
-      const {sushiToken,sushiBar} = await loadFixture(deployFixture);
-      const [owner,acc1] = await ethers.getSigners();
+      const {sushiToken,sushiBar,acc1} = await loadFixture(deployFixture);
       await sushiToken.connect(acc1).approve(sushiBar.address,"2000000000000000000000");
       await sushiBar.connect(acc1).enter("2000000000000000000000");
       expect(await sushiBar.balanceOf(acc1.address)).to.equal("2000000000000000000000");
@@ -55,8 +54,7 @@ describe("sushiBar", function () {
     });
 
     it("Should store the right data", async function () {
-      const {sushiToken,sushiBar} = await loadFixture(deployFixture);
-      const [owner,acc1] = await ethers.getSigners();
+      const {sushiToken,sushiBar,acc1} = await loadFixture(deployFixture);
       await sushiToken.connect(acc1).approve(sushiBar.address,"2000000000000000000000");
       await sushiBar.connect(acc1).enter("2000000000000000000000");
       const atEnter = (await time.latest());
@@ -64,6 +62,15 @@ describe("sushiBar", function () {
       expect(acc1.address).to.equal(d[0]);
       expect(atEnter).to.equal(d[1]);
       expect("2000000000000000000000").to.equal(d[2]);
+    });
+    it("Should return right depositID",async function (){
+      const {sushiToken,sushiBar,acc1} = await loadFixture(deployFixture);
+      await sushiToken.connect(acc1).approve(sushiBar.address,"2000000000000000000000");
+      await sushiBar.connect(acc1).enter("1000000000000000000000");
+      const e = await sushiBar.connect(acc1).enter("1000000000000000000000");
+      const eWait = await e.wait();
+      const depositId= eWait.events[3].args[0];
+      expect(depositId).to.equal("1");
     });
 
     it("Should mint correct amount of xSushi in different scenario", async function () {
@@ -82,7 +89,7 @@ describe("sushiBar", function () {
 
   describe("Leave", function () {
     it("after 8 days 0% tax should deduct", async function () {
-      const {sushiToken,sushiBar,acc1,owner,rewardPool} = await loadFixture(deployFixture);
+      const {sushiToken,sushiBar,acc1,rewardPool} = await loadFixture(deployFixture);
 
       await sushiToken.connect(acc1).approve(sushiBar.address,"2000000000000000000000");
       await sushiBar.connect(acc1).enter("2000000000000000000000");
@@ -98,7 +105,7 @@ describe("sushiBar", function () {
     });
 
     it("after 6 days 25% tax should deduct", async function () {
-      const {sushiToken,sushiBar,acc1,owner,rewardPool} = await loadFixture(deployFixture);
+      const {sushiToken,sushiBar,acc1,rewardPool} = await loadFixture(deployFixture);
 
       await sushiToken.connect(acc1).approve(sushiBar.address,"2000000000000000000000");
       await sushiBar.connect(acc1).enter("2000000000000000000000");
@@ -145,8 +152,8 @@ describe("sushiBar", function () {
       expect(await sushiBar.balanceOf(acc1.address)).to.equal("0");
     });
 
-    it("should not unlock before 2 days", async function () {
-      const {sushiToken,sushiBar,acc1,owner,rewardPool} = await loadFixture(deployFixture);
+    it("amount should lock if try to leave before 2 days", async function () {
+      const {sushiToken,sushiBar,acc1,rewardPool} = await loadFixture(deployFixture);
 
       await sushiToken.connect(acc1).approve(sushiBar.address,"2000000000000000000000");
       await sushiBar.connect(acc1).enter("2000000000000000000000");
